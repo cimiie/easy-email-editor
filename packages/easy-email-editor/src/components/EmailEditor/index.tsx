@@ -11,6 +11,7 @@ import { EditEmailPreview } from './components/EditEmailPreview';
 import { IconFont } from '../IconFont';
 import { TabPane, Tabs } from '@/components/UI/Tabs';
 import { useEditorProps } from '@/hooks/useEditorProps';
+import { useDarkPreview } from '../Provider/DarkPreviewProvider';
 import './index.scss';
 import '@/assets/font/iconfont.css';
 import { EventManager, EventType } from '@/utils/EventManager';
@@ -20,6 +21,7 @@ import { EventManager, EventType } from '@/utils/EventManager';
 export const EmailEditor = () => {
   const { height: containerHeight } = useEditorProps();
   const { setActiveTab, activeTab } = useActiveTab();
+  const { darkPreview, toggleDarkPreview } = useDarkPreview();
 
   const fixedContainer = useMemo(() => {
     return createPortal(<div id={FIXED_CONTAINER_ID} />, document.body);
@@ -29,9 +31,24 @@ export const EmailEditor = () => {
     return EventManager.exec(EventType.ACTIVE_TAB_CHANGE, { currentTab, nextTab });
   }, []);
 
-  const onChangeTab = useCallback((nextTab: string) => {
-    setActiveTab(nextTab as any);
-  }, [setActiveTab]);
+  const onChangeTab = useCallback(
+    (nextTab: string) => {
+      setActiveTab(nextTab as any);
+    },
+    [setActiveTab],
+  );
+
+  const darkModeToggle = useMemo(
+    () => (
+      <IconFont
+        iconName={darkPreview ? 'icon-eye' : 'icon-eye-invisible'}
+        title={darkPreview ? 'Switch to light mode' : 'Switch to dark mode'}
+        onClick={toggleDarkPreview}
+        style={{ cursor: 'pointer' }}
+      />
+    ),
+    [darkPreview, toggleDarkPreview],
+  );
 
   return useMemo(
     () => (
@@ -52,36 +69,37 @@ export const EmailEditor = () => {
           onChange={onChangeTab}
           style={{ height: '100%', width: '100%' }}
           tabBarExtraContent={<ToolsPanel />}
+          tabBarAfterContent={darkModeToggle}
         >
           <TabPane
             style={{ height: 'calc(100% - 50px)' }}
-            tab={(
+            tab={
               <Stack spacing='tight'>
                 <IconFont iconName='icon-editor' />
               </Stack>
-            )}
+            }
             key={ActiveTabKeys.EDIT}
           >
             <EditEmailPreview />
           </TabPane>
           <TabPane
             style={{ height: 'calc(100% - 50px)' }}
-            tab={(
+            tab={
               <Stack spacing='tight'>
                 <IconFont iconName='icon-desktop' />
               </Stack>
-            )}
+            }
             key={ActiveTabKeys.PC}
           >
             <DesktopEmailPreview />
           </TabPane>
           <TabPane
             style={{ height: 'calc(100% - 50px)' }}
-            tab={(
+            tab={
               <Stack spacing='tight'>
                 <IconFont iconName='icon-mobile' />
               </Stack>
-            )}
+            }
             key={ActiveTabKeys.MOBILE}
           >
             <MobileEmailPreview />
@@ -90,6 +108,13 @@ export const EmailEditor = () => {
         <>{fixedContainer}</>
       </div>
     ),
-    [activeTab, containerHeight, fixedContainer, onBeforeChangeTab, onChangeTab]
+    [
+      activeTab,
+      containerHeight,
+      fixedContainer,
+      onBeforeChangeTab,
+      onChangeTab,
+      darkModeToggle,
+    ],
   );
 };

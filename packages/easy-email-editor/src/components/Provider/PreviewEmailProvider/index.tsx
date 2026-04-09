@@ -6,6 +6,7 @@ import { JsonToMjml } from 'easy-email-core';
 import { cloneDeep, isString } from 'lodash';
 import mjml from 'mjml-browser';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useDarkPreview, DARK_PREVIEW_CSS } from '../DarkPreviewProvider';
 
 export const MOBILE_WIDTH = 320;
 
@@ -21,7 +22,7 @@ export const PreviewEmailContext = React.createContext<{
   mobileWidth: 320,
 });
 
-export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode }> = props => {
+export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode; }> = props => {
   const { current: iframe } = useRef(document.createElement('iframe'));
   const contentWindowRef = useRef<Window | null>(null);
 
@@ -32,6 +33,7 @@ export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode }> = pr
   const [errMsg, setErrMsg] = useState<React.ReactNode>('');
   const [html, setHtml] = useState('');
   const lazyPageData = useLazyState(pageData, 0);
+  const { darkPreview } = useDarkPreview();
 
   const injectData = useMemo(() => {
     if (previewInjectData) {
@@ -66,6 +68,11 @@ export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode }> = pr
         keepClassName: true,
       }),
     ).html;
+
+    if (darkPreview) {
+      parseHtml = parseHtml.replace('</head>', DARK_PREVIEW_CSS + '</head>');
+    }
+
     if (onBeforePreview) {
       try {
         const result = onBeforePreview(parseHtml, injectData);
@@ -90,7 +97,7 @@ export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode }> = pr
     return () => {
       setHtml('');
     };
-  }, [injectData, onBeforePreview, lazyPageData, mobileWidth]);
+  }, [injectData, onBeforePreview, lazyPageData, mobileWidth, darkPreview]);
 
   const htmlNode = useMemo(() => HtmlStringToPreviewReactNodes(html), [html]);
 

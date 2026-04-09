@@ -28,6 +28,7 @@ export * from './hooks/useFocusIdx';
 export * from './hooks/useHoverIdx';
 
 export { ActiveTabKeys } from './components/Provider/BlocksProvider';
+export { useDarkPreview } from './components/Provider/DarkPreviewProvider';
 
 // UI
 export { IconFont } from './components/IconFont';

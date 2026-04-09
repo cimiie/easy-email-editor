@@ -5,16 +5,21 @@ import { useHotKeys } from '@/hooks/useHotKeys';
 import { SyncScrollShadowDom } from '@/components/UI/SyncScrollShadowDom';
 import { ShadowStyle } from './components/ShadowStyle';
 import { useEditorContext } from '@/hooks/useEditorContext';
-import { DATA_ATTRIBUTE_DROP_CONTAINER, SYNC_SCROLL_ELEMENT_CLASS_NAME } from '@/constants';
+import {
+  DATA_ATTRIBUTE_DROP_CONTAINER,
+  SYNC_SCROLL_ELEMENT_CLASS_NAME,
+} from '@/constants';
 import { classnames } from '@/utils/classnames';
 import { ActiveTabKeys } from '@/components/Provider/BlocksProvider';
 import { useActiveTab } from '@/hooks/useActiveTab';
+import { useDarkPreview } from '@/components/Provider/DarkPreviewProvider';
 
 export function EditEmailPreview() {
   useHotKeys();
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   const { setRef } = useDropBlock();
   const { activeTab } = useActiveTab();
+  const { darkPreview } = useDarkPreview();
 
   const { setInitialized } = useEditorContext();
 
@@ -60,15 +65,15 @@ export function EditEmailPreview() {
             paddingTop: 40,
             paddingBottom: 40,
             boxSizing: 'border-box',
+            backgroundColor: '#f5f5f5',
           }}
           ref={setContainerRef}
-
         >
           <MjmlDomRender />
         </div>
         <ShadowStyle />
       </SyncScrollShadowDom>
     ),
-    [activeTab]
+    [activeTab, darkPreview],
   );
 }

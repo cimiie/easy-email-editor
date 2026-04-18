@@ -62,7 +62,7 @@ export const Page = createBlock<IPage>({
         },
       },
       attributes: {
-        'background-color': '#efeeea',
+        'background-color': '#f0eeea',
         width: '600px',
       },
       children: [Wrapper.create()],

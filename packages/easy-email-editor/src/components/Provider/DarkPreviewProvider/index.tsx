@@ -1,9 +1,11 @@
 import React, { useContext, useState, useCallback, useMemo } from 'react';
 
 export {
+  PREVIEW_BASE_CSS,
   DARK_PREVIEW_CSS,
-  DARK_PREVIEW_CSS_RAW,
   DARK_EDITOR_CSS_RAW,
+  DEFAULT_TEXT_COLOR,
+  DARK_TEXT_COLOR,
 } from './darkModeCss';
 
 interface DarkPreviewContextType {

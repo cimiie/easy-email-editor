@@ -6,7 +6,13 @@ import { JsonToMjml } from 'easy-email-core';
 import { cloneDeep, isString } from 'lodash';
 import mjml from 'mjml-browser';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useDarkPreview, DARK_PREVIEW_CSS } from '../DarkPreviewProvider';
+import {
+  useDarkPreview,
+  DARK_PREVIEW_CSS,
+  PREVIEW_BASE_CSS,
+  DEFAULT_TEXT_COLOR,
+  DARK_TEXT_COLOR,
+} from '../DarkPreviewProvider';
 
 export const MOBILE_WIDTH = 320;
 
@@ -59,6 +65,9 @@ export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode; }> = p
         },
       },
     };
+    if (darkPreview && cloneData.data.value['text-color'] === DEFAULT_TEXT_COLOR) {
+      cloneData.data.value['text-color'] = DARK_TEXT_COLOR;
+    }
     let parseHtml = mjml(
       JsonToMjml({
         data: cloneData,
@@ -69,9 +78,8 @@ export const PreviewEmailProvider: React.FC<{ children?: React.ReactNode; }> = p
       }),
     ).html;
 
-    if (darkPreview) {
-      parseHtml = parseHtml.replace('</head>', DARK_PREVIEW_CSS + '</head>');
-    }
+    const previewStyles = PREVIEW_BASE_CSS + (darkPreview ? DARK_PREVIEW_CSS : '');
+    parseHtml = parseHtml.replace('</head>', previewStyles + '</head>');
 
     if (onBeforePreview) {
       try {

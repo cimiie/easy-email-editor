@@ -33,7 +33,6 @@ export function FocusTooltip() {
                 .email-block {
                   position: relative;
                 }
-
             `}
           </style>
           <div
@@ -77,7 +76,6 @@ export function FocusTooltip() {
             </BlockAvatarWrapper>
           </div>
 
-          {/* outline */}
           <div
             style={{
               position: 'absolute',

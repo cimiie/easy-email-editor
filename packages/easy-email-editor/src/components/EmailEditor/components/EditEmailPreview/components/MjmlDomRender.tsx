@@ -8,6 +8,7 @@ import { createPortal } from 'react-dom';
 import { useEditorProps } from '@/hooks/useEditorProps';
 import { getEditorRoot, getShadowRoot } from '@/utils';
 import { DATA_RENDER_COUNT, FIXED_CONTAINER_ID } from '@/constants';
+import { useDarkPreview, DEFAULT_TEXT_COLOR, DARK_TEXT_COLOR } from '@/components/Provider/DarkPreviewProvider';
 
 let count = 0;
 export function MjmlDomRender() {
@@ -16,6 +17,7 @@ export function MjmlDomRender() {
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
   const { dashed, mergeTags, enabledMergeTagsBadge } = useEditorProps();
   const [isTextFocus, setIsTextFocus] = useState(false);
+  const { darkPreview } = useDarkPreview();
 
   const isTextFocusing =
     document.activeElement === getEditorRoot() &&
@@ -69,17 +71,31 @@ export function MjmlDomRender() {
   const html = useMemo(() => {
     if (!pageData) return '';
 
+    const renderPageData =
+      darkPreview && pageData.data.value['text-color'] === DEFAULT_TEXT_COLOR
+        ? {
+            ...pageData,
+            data: {
+              ...pageData.data,
+              value: {
+                ...pageData.data.value,
+                'text-color': DARK_TEXT_COLOR,
+              },
+            },
+          }
+        : pageData;
+
     const renderHtml = mjml(
       JsonToMjml({
-        data: pageData,
+        data: renderPageData,
         idx: getPageIdx(),
-        context: pageData,
+        context: renderPageData,
         mode: 'testing',
         dataSource: cloneDeep(mergeTags),
       }),
     ).html;
     return renderHtml;
-  }, [mergeTags, pageData]);
+  }, [darkPreview, mergeTags, pageData]);
 
   return useMemo(() => {
     return (

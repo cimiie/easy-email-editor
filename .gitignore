@@ -13,3 +13,11 @@ stats.html
 
 # webstorm
 .idea
+
+# Temporary edge/browser cache directories
+.tmp-*
+tmp-*
+
+# Temporary files
+*.tmp
+*.temp

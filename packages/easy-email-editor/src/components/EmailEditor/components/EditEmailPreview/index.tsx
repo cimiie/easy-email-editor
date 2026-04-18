@@ -12,14 +12,12 @@ import {
 import { classnames } from '@/utils/classnames';
 import { ActiveTabKeys } from '@/components/Provider/BlocksProvider';
 import { useActiveTab } from '@/hooks/useActiveTab';
-import { useDarkPreview } from '@/components/Provider/DarkPreviewProvider';
 
 export function EditEmailPreview() {
   useHotKeys();
   const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
   const { setRef } = useDropBlock();
   const { activeTab } = useActiveTab();
-  const { darkPreview } = useDarkPreview();
 
   const { setInitialized } = useEditorContext();
 
@@ -65,7 +63,7 @@ export function EditEmailPreview() {
             paddingTop: 40,
             paddingBottom: 40,
             boxSizing: 'border-box',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#ffffff',
           }}
           ref={setContainerRef}
         >
@@ -74,6 +72,6 @@ export function EditEmailPreview() {
         <ShadowStyle />
       </SyncScrollShadowDom>
     ),
-    [activeTab, darkPreview],
+    [activeTab],
   );
 }

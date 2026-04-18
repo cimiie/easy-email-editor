@@ -7,10 +7,12 @@ import { SyncScrollShadowDom } from '@/components/UI/SyncScrollShadowDom';
 import { classnames } from '@/utils/classnames';
 import { SYNC_SCROLL_ELEMENT_CLASS_NAME } from '@/constants';
 import { createPortal } from 'react-dom';
+import { useDarkPreview } from '@/components/Provider/DarkPreviewProvider';
 
 export function DesktopEmailPreview() {
   const { activeTab } = useActiveTab();
   const { errMsg, reactNode } = usePreviewEmail();
+  const { darkPreview } = useDarkPreview();
 
   const { pageData } = useEditorContext();
 
@@ -65,12 +67,12 @@ export function DesktopEmailPreview() {
               height: '100%',
               overflow: 'auto',
               margin: 'auto',
-
               paddingLeft: 10,
               paddingRight: 10,
               paddingTop: 40,
-              paddingBottom: 140,
+              paddingBottom: darkPreview ? 40 : 140,
               boxSizing: 'border-box',
+              backgroundColor: '#ffffff',
             }}
           >
             <>{reactNode}</>

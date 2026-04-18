@@ -12,8 +12,27 @@ export function HtmlStringToPreviewReactNodes(
   content: string,
 ) {
   let doc = domParser.parseFromString(content, 'text/html'); // The average time is about 1.4 ms
+  const headNodes = [...doc.head.childNodes].map((node, index) => (
+    <RenderReactNode
+      selector={getChildSelector(getChildSelector('0', 0), index)}
+      node={node as any}
+      index={index}
+      key={`head-${index}`}
+    />
+  ));
+  const bodyNodes = [...doc.body.childNodes].map((node, index) => (
+    <RenderReactNode
+      selector={getChildSelector(getChildSelector('0', 1), index)}
+      node={node as any}
+      index={index}
+      key={`body-${index}`}
+    />
+  ));
   const reactNode = (
-    <RenderReactNode selector={'0'} node={doc.documentElement} index={0} />
+    <>
+      {headNodes}
+      {bodyNodes}
+    </>
   );
 
   return reactNode;
